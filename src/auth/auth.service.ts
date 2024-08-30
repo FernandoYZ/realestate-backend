@@ -53,7 +53,7 @@ export class AuthService {
       const message = error.name === 'TokenExpiredError'
         ? 'El token de actualización ha caducado'
         : 'Token de actualización inválido';
-        throw new AppException(message);
+      throw new AppException(message);
     }
   }
 
