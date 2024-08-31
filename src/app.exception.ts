@@ -7,6 +7,18 @@ export class AppException extends HttpException {
     }
 }
 
+export class AppNotFound extends HttpException {
+    constructor(data: string, message: string = `${data} no encontrado`) {
+        super(message, HttpStatus.NOT_FOUND);
+    }
+}
+
+export class AppConflict extends HttpException {
+    constructor(data: string, message: string = `${data} ya existe`) {
+        super(message, HttpStatus.CONFLICT);
+    }
+}
+
 export class AppBadRequest extends HttpException {
     constructor(message: string) {
         super(
