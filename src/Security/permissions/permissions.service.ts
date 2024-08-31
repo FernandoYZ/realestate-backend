@@ -1,26 +1,62 @@
 import { Injectable } from '@nestjs/common';
-import { CreateRoleDto } from './dto/create-role.dto';
-import { UpdateRoleDto } from './dto/update-role.dto';
+import { CreatePermissionDto } from './dto/create-permission.dto';
+import { UpdatePermissionDto } from './dto/update-permission.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Permission, PermissionDocument } from './entities/permission.entity';
+import { Model } from 'mongoose';
+import { AppConflict, AppNotFound } from 'src/app.exception';
 
 @Injectable()
-export class RolesService {
-  create(createRoleDto: CreateRoleDto) {
-    return 'This action adds a new role';
-  }
+export class PermissionsService {
+  constructor(
+    @InjectModel(Permission.name) private permissionModel: Model<PermissionDocument>,
+) {}
 
-  findAll() {
-    return `This action returns all roles`;
-  }
+async create(createPermissionDto: CreatePermissionDto): Promise<Permission> {
+    const existingPermission = await this.permissionModel.findOne({ 
+        name: createPermissionDto.name 
+    });
 
-  findOne(id: number) {
-    return `This action returns a #${id} role`;
-  }
+    if (existingPermission) {
+      throw new AppConflict('Permiso');
+    }
 
-  update(id: number, updateRoleDto: UpdateRoleDto) {
-    return `This action updates a #${id} role`;
-  }
+    const newPermission = new this.permissionModel(createPermissionDto);
+    return await newPermission.save();
+}
 
-  remove(id: number) {
-    return `This action removes a #${id} role`;
-  }
+async findAll(): Promise<Permission[]> {
+    return await this.permissionModel.find().exec();
+}
+
+async findOne(id: string): Promise<Permission> {
+    const permission = await this.permissionModel.findById(id).exec();
+    if (!permission) {
+      throw new AppNotFound('Permiso');
+    }
+    return permission;
+}
+
+async update(id: string, updatePermissionDto: UpdatePermissionDto): Promise<Permission> {
+    const updatedPermission = await this.permissionModel.findByIdAndUpdate(
+        id, 
+        updatePermissionDto, 
+        { new: true },
+    ).exec();
+
+    if (!updatedPermission) {
+      throw new AppNotFound('Permiso');
+    }
+
+    return updatedPermission;
+}
+
+async remove(id: string): Promise<{ message: string }> {
+    const deletedPermission = await this.permissionModel.findByIdAndDelete(id).exec();
+    if (!deletedPermission) {
+      throw new AppNotFound('Permiso');
+    }
+
+    return { message: 'Permission deleted successfully' };
+}
 }
