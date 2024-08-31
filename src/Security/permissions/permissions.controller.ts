@@ -1,34 +1,34 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { RolesService } from './permissions.service';
-import { CreateRoleDto } from './dto/create-permission.dto';
-import { UpdateRoleDto } from './dto/update-permission.dto';
+import { PermissionsService } from './permissions.service';
+import { CreatePermissionDto } from './dto/create-permission.dto';
+import { UpdatePermissionDto } from './dto/update-permission.dto';
 
-@Controller('roles')
-export class permissionsController {
-  constructor(private readonly rolesService: RolesService) {}
+@Controller('permissions')
+export class PermissionsController {
+  constructor(private readonly permissionsService: PermissionsService) {}
 
-  @Post()
-  create(@Body() createpermissionDto: CreatepermissionDto) {
-    return this.permissionsService.create(createpermissionDto);
-  }
+    @Post()
+    async create(@Body() createPermissionDto: CreatePermissionDto) {
+        return await this.permissionsService.create(createPermissionDto);
+    }
 
-  @Get()
-  findAll() {
-    return this.rolesService.findAll();
-  }
+    @Get()
+    async findAll() {
+        return await this.permissionsService.findAll();
+    }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.permissionsService.findOne(+id);
-  }
+    @Get(':id')
+    async findOne(@Param('id') id: string) {
+        return await this.permissionsService.findOne(id);
+    }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRoleDto: UpdateRoleDto) {
-    return this.permissionsService.update(+id, updateRoleDto);
-  }
+    @Patch(':id')
+    async update(@Param('id') id: string, @Body() updatePermissionDto: UpdatePermissionDto) {
+        return await this.permissionsService.update(id, updatePermissionDto);
+    }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.permissionsService.remove(+id);
-  }
+    @Delete(':id')
+    async remove(@Param('id') id: string) {
+        return await this.permissionsService.remove(id);
+    }
 }
