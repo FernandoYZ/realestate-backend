@@ -1,34 +1,16 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document } from "mongoose";
-import { v4 as uuidv4 } from 'uuid';
-import { Status } from "../dto/create-permission.dto";
+import { Status } from "../../../enums/status.enum";
 
 export type PermissionDocument = Permission & Document;
 
 @Schema()
-class Submodule {
-    @Prop({ required: true, default: () => uuidv4() })
-    id: string;
-
-    @Prop({ required: true })
-    name: string;
-}
-
-const SubmoduleSchema = SchemaFactory.createForClass(Submodule);
-
-@Schema()
 export class Permission extends Document {
-    @Prop({ required: true })
-    name: string;
-
-    @Prop()
-    description: string;
-
-    @Prop({ required: true, unique: true, index: true })
+    @Prop({ required: true, unique: true })
     module: string;
 
-    @Prop({ type: [SubmoduleSchema], required: true })
-    submodules: Submodule[];
+    @Prop({ required:false, default: 'Acceso al módulo' })
+    description: string;
 
     @Prop({ required: true, enum: Status, default: Status.activated })
     status: Status;
