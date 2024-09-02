@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreatePermissionDto } from './dto/create-permission.dto';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { Permission, PermissionDocument } from './entities/permission.entity';
+import { Permission, PermissionDocument } from './schemas/permission.schema';
 import { Model } from 'mongoose';
 import { AppConflict, AppNotFound } from 'src/app.exception';
 
@@ -12,7 +12,7 @@ export class PermissionsService {
     @InjectModel(Permission.name) private permissionModel: Model<PermissionDocument>,
   ) {}
 
-  async create(createPermissionDto: CreatePermissionDto): Promise<Permission> {
+  async create(createPermissionDto: CreatePermissionDto): Promise<{permission: Permission, message: string }> {
     const existingPermission = await this.permissionModel.findOne({ 
         module: createPermissionDto.module 
     });
@@ -22,7 +22,8 @@ export class PermissionsService {
     }
 
     const newPermission = new this.permissionModel(createPermissionDto);
-    return await newPermission.save();
+    const savePermission = await newPermission.save();
+    return {permission: savePermission, message: "Permiso agregado con éxito"};
   }
 
   async findAll(): Promise<Permission[]> {
@@ -51,11 +52,11 @@ export class PermissionsService {
       return updatedPermission;
   }
 
-  async remove(id: string): Promise<{ message: string }> {
+  async remove(id: string): Promise<{ permission: Permission; message: string }> {
       const deletedPermission = await this.permissionModel.findByIdAndDelete(id).exec();
       if (!deletedPermission) {
         throw new AppNotFound('Permiso no encontrado');
       }
-      return { message: 'Permiso eliminado exitosamente' };
+      return { permission:deletedPermission, message: 'Permiso eliminado exitosamente' };
   }
 }
