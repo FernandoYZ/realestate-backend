@@ -1,19 +1,13 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document } from "mongoose";
 import { Status } from "../../../enums/status.enum";
 
-export type PermissionDocument = Permission & Document;
-
-@Schema()
-export class Permission extends Document {
-    @Prop({ required: true, unique: true })
+export class PermissionEntity {
     module: string;
-
-    @Prop({ required:false, default: 'Acceso al módulo' })
-    description: string;
-
-    @Prop({ required: true, enum: Status, default: Status.activated })
+    description?: string;
     status: Status;
-}
 
-export const PermissionSchema = SchemaFactory.createForClass(Permission);
+    constructor(module: string, status: Status, create_at: Date, updated_at: Date, description?: string) {
+        this.module = module;
+        this.description = description;
+        this.status = status;
+    }
+}
