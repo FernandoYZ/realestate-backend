@@ -5,7 +5,7 @@ export class PermissionEntity {
     description?: string;
     status: Status;
 
-    constructor(module: string, status: Status, create_at: Date, updated_at: Date, description?: string) {
+    constructor(module: string, status: Status, description?: string) {
         this.module = module;
         this.description = description;
         this.status = status;
