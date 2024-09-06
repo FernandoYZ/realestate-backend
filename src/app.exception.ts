@@ -37,6 +37,19 @@ export class AppManyRequest extends HttpException {
     }
 }
 
+export function DataNotFound(nameData:string, data:any) {
+    if(!data) {
+        throw new AppNotFound(nameData)
+    }
+}
+
+export function DataConflict(nameData:string, data:any) {
+    if(data) {
+        throw new AppConflict(nameData);
+    }
+}
+
+
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
     private readonly logger = new Logger(HttpExceptionFilter.name);
