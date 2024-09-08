@@ -10,11 +10,8 @@ export class Role extends Document {
     @Prop({ required:true, unique:true, index:true})
     name: string;
 
-    @Prop({required:false })
+    @Prop({required:false, default:"Descripción del rol a ejercer" })
     description: string;
-
-    @Prop({ required:true, enum:Actions, default:Actions.read})
-    actions: Actions
 
     @Prop({ required:true, enum:Status, default:Status.pending })
     status: Status
