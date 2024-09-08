@@ -9,10 +9,13 @@ export class Permission extends Document {
     @Prop({ required: true, unique: true, index:true })
     module: string;
 
+    @Prop({ required:true})
+    submodule: string
+
     @Prop({ required:false, default: 'Acceso al módulo' })
     description: string;
 
-    @Prop({ required: true, enum: Status, default: Status.activated })
+    @Prop({ required: true, enum: Status, default: Status.pending })
     status: Status;
 }
 
