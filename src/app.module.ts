@@ -23,6 +23,7 @@ import { BranchesModule } from './setting/branches/branches.module';
 import { BanksModule } from './setting/banks/banks.module';
 import { VouchersModule } from './setting/vouchers/vouchers.module';
 import { ReportsModule } from './reports/reports.module';
+import { AccessModule } from './security/access/access.module';
 
 @Module({
   imports: [
@@ -56,6 +57,7 @@ import { ReportsModule } from './reports/reports.module';
     CurrenciesModule,
     ReportsModule,
     PaymentsModule,
+    AccessModule,
   ],
 })
 export class AppModule {}
