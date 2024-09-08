@@ -13,11 +13,7 @@ export class CreateRoleDto {
     @Length(0, 250)
     readonly description?: string;
 
-    @IsEnum(Actions)
-    @IsOptional()
-    readonly actions: string;
-
     @IsEnum(Status)
     @IsOptional()
-    readonly status: string;
+    readonly status?: Status;
 }
