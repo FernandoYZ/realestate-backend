@@ -4,7 +4,7 @@ import { UpdateAccessDto } from './dto/update-access.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Access, AccessDocument } from './schemas/access.schema';
 import { Model } from 'mongoose';
-import { DataConflict, DataNotFound } from 'src/app.exception';
+import { DataBadRequest, DataConflict, DataNotFound } from 'src/app.exception';
 
 @Injectable()
 export class AccessService {
@@ -28,18 +28,14 @@ export class AccessService {
     };
   }
 
-  async findAll(): Promise<{ data: Access[], message: string }> {
+  async findAll(): Promise<Access[]> {
     const accesos = await this.accessModel
       .find()
       .populate('role permissions')
       .exec();
-      
+    DataBadRequest('Accesos', accesos);
     DataNotFound('Accesos', accesos);
-    
-    return {
-      data: accesos,
-      message: 'Accesos obtenidos con éxito',
-    };
+    return accesos;
   }
 
   async findOne(id: string): Promise<{ data: Access, message: string }> {
