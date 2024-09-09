@@ -1,10 +1,14 @@
-import { IsArray, IsEnum, IsNotEmpty, IsOptional, IsString, ArrayMinSize, ValidateNested, ArrayUnique } from "class-validator";
+import { IsArray, IsEnum, IsNotEmpty, IsOptional, IsString, ArrayMinSize, ValidateNested, ArrayUnique, MaxLength } from "class-validator";
 import { Schema as MongooseSchema } from "mongoose";
 import { Type } from "class-transformer";
 import { Status } from "src/enums/status.enum";
 import { Actions, ActionsDto } from "src/enums/actions.enum";
 
 export class CreateAccessDto {
+    @IsOptional()
+    @MaxLength(255, {message: "El campo debe tener como máximo 255 caracteres"})
+    readonly description?: string;
+
     @IsString({ message: "El acceso debe contener solo letras" })
     @IsNotEmpty({ message: "El acceso a crear no debe estar vacío" })
     readonly role: string;
