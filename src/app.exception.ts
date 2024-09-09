@@ -20,7 +20,7 @@ export class AppConflict extends HttpException {
 }
 
 export class AppBadRequest extends HttpException {
-    constructor(message: string) {
+    constructor(data: string, message: string = `No hay ${data} registrados`) {
         super(
             message,
             HttpStatus.BAD_REQUEST
@@ -49,6 +49,11 @@ export function DataConflict(nameData:string, data:any) {
     }
 }
 
+export function DataBadRequest(nameData: string, data:any) {
+    if(!data || data.length === 0) {
+        throw new AppBadRequest(nameData);
+    }
+}
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
