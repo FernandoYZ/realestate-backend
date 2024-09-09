@@ -3,57 +3,76 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { User, UserDocument } from './entities/user.entity';
+import { User, UserDocument } from './schemas/user.schema';
 import * as bcrypt from 'bcrypt';
+import { DataBadRequest, DataConflict, DataNotFound } from 'src/app.exception';
 
 @Injectable()
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async create(createUserDto: CreateUserDto): Promise<{ data:User, message: string }> {
     const existingUser = await this.userModel.findOne({ email: createUserDto.email });
-    if (existingUser) {
-      throw new HttpException('User already exists', HttpStatus.CONFLICT);
-    }
-
-    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+    DataConflict('Usuario', existingUser);
+    const hashedPassword = await bcrypt.hash(createUserDto.password, 12);
     const newUser = new this.userModel({
       ...createUserDto,
       password: hashedPassword,
     });
+    const guardarUser = await newUser.save();
 
-    return await newUser.save();
+    return {
+      data: guardarUser,
+      message: 'Usuario agregado con éxito'
+    }
   }
 
   async findByEmail(email: string): Promise<User | undefined> {
     return this.userModel.findOne({ email }).exec();
   }
 
-  findAll() {
-    return this.userModel.find().exec();
-  }
-
-  async findOne(id: string) {
-    const user = await this.userModel.findById(id).exec();
-    if (!user) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-    }
+  async findAll():Promise<User[]> {
+    const user = await this.userModel
+      .find()
+      .populate('access')
+      .exec()
+    DataBadRequest('Usuario', user);
+    DataNotFound('Usuario', user);
     return user;
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto) {
-    const updatedUser = await this.userModel.findByIdAndUpdate(id, updateUserDto, { new: true }).exec();
-    if (!updatedUser) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-    }
-    return updatedUser;
+  async findOne(id: string):Promise<{ data: User, message: string }> {
+    const user = await this.userModel
+      .findById(id)
+      .populate('access')
+      .exec();
+    DataNotFound('Usuario', user);
+    return {
+      data: user,
+      message: `Acceso con ID ${id}, obtenido con éxito`
+    };
   }
 
-  async remove(id: string) {
-    const deletedUser = await this.userModel.findByIdAndDelete(id).exec();
-    if (!deletedUser) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-    }
-    return { message: 'User deleted successfully' };
+  async update(id: string, updateUserDto: UpdateUserDto):Promise<{ data: User, message: string }> {
+    const updatedUser = await this.userModel
+      .findByIdAndUpdate(id, updateUserDto, { new: true })
+      .populate('access')
+      .exec();
+    DataNotFound('Usuario', updatedUser);
+    return {
+      data:updatedUser,
+      message: 'Usuario registrado con éxito'
+    };
+  }
+
+  async remove(id: string):Promise<{ data: User, message: string }> {
+    const deletedUser = await this.userModel
+      .findByIdAndDelete(id)
+      .exec();
+    DataNotFound('Usuario', deletedUser)
+    return { 
+      data: deletedUser,
+      message: 'Usuario Eliminado con éxito' 
+    };
   }
 }
