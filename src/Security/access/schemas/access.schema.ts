@@ -8,6 +8,9 @@ export type AccessDocument = Access & Document;
 
 @Schema({ timestamps: true })
 export class Access extends Document {
+    @Prop( {required: false, maxlength:255})
+    description?: string;
+    
     @Prop({
         required: true,
         type: MongooseSchema.Types.ObjectId,
