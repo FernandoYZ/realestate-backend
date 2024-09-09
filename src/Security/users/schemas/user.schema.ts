@@ -20,7 +20,7 @@ export class User extends Document {
             type: MongooseSchema.Types.ObjectId,
             ref: 'Access',
             autopopulate: {
-                select: 'role permissions',
+                select: 'role permissions actions',
                 populate: [
                     { path: 'role', select: 'name' },
                     { path: 'permissions', select: 'module' }
