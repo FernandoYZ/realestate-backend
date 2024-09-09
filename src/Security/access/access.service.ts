@@ -13,7 +13,6 @@ export class AccessService {
   ) {}
 
   async create(createAccessDto: CreateAccessDto): Promise<{ data: Access, message: string }> {
-    // Verificar si el acceso ya existe
     const verificarAccess = await this.accessModel.findOne({
       role: createAccessDto.role,
     });
