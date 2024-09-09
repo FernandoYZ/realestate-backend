@@ -8,27 +8,27 @@ export class AccessController {
   constructor(private readonly accessService: AccessService) {}
 
   @Post()
-  create(@Body() createAccessDto: CreateAccessDto) {
-    return this.accessService.create(createAccessDto);
+  async create(@Body() createAccessDto: CreateAccessDto) {
+    return await this.accessService.create(createAccessDto);
   }
 
   @Get()
-  findAll() {
-    return this.accessService.findAll();
+  async findAll() {
+    return await this.accessService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.accessService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    return await this.accessService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAccessDto: UpdateAccessDto) {
-    return this.accessService.update(+id, updateAccessDto);
+  async update(@Param('id') id: string, @Body() updateAccessDto: UpdateAccessDto) {
+    return await this.accessService.update(id, updateAccessDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.accessService.remove(+id);
+  async remove(@Param('id') id: string) {
+    return await this.accessService.remove(id);
   }
 }
