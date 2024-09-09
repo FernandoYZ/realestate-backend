@@ -41,16 +41,13 @@ export class UsersService {
     return user;
   }
 
-  async findOne(id: string):Promise<{ data: User, message: string }> {
+  async findOne(id: string):Promise<User> {
     const user = await this.userModel
       .findById(id)
       .populate('access')
       .exec();
     DataNotFound('Usuario', user);
-    return {
-      data: user,
-      message: `Acceso con ID ${id}, obtenido con éxito`
-    };
+    return user;
   }
 
   async update(id: string, updateUserDto: UpdateUserDto):Promise<{ data: User, message: string }> {
