@@ -12,7 +12,9 @@ export class Access extends Document {
         required: true,
         type: MongooseSchema.Types.ObjectId,
         ref: 'Role',
-        autopopulate: true
+        autopopulate: {
+            select: '_id name'
+        }
     })
     role: MongooseSchema.Types.ObjectId;
 
@@ -21,7 +23,9 @@ export class Access extends Document {
         type: [{
             type: MongooseSchema.Types.ObjectId,
             ref: 'Permission',
-            autopopulate: true
+            autopopulate: {
+                select: '_id module status'
+            }
         }]
     })
     permissions: MongooseSchema.Types.ObjectId[];
