@@ -37,4 +37,8 @@ export class CreateUserDto {
     @IsEnum(Status, { message: 'Por favor, seleccione un estado válido.' })
     @IsOptional()
     readonly status?: Status;
+
+    @IsArray()
+    @IsOptional()
+    readonly ips: string[];
 }
