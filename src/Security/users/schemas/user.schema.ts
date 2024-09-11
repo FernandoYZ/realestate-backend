@@ -33,7 +33,7 @@ export class User extends Document {
     @Prop({ required:true, unique: true, maxlength:8, minlength:8 })
     identity_document: number;
 
-    @Prop({ required:true, enum: Gender, default: [] })
+    @Prop({ required:true, enum: Gender, default: Gender.other })
     gender: string;
 
     @Prop({ required:true, unique:true })
@@ -44,6 +44,9 @@ export class User extends Document {
 
     @Prop({ required: true, enum: Status, default: Status.activated})
     status: Status;
+
+    @Prop({ type: [String], default: [] })
+    ips: string[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
