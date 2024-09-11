@@ -5,6 +5,7 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from 'src/security/users/users.module';
+import { TokenModule } from './token/token.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { UsersModule } from 'src/security/users/users.module';
         },
       }),
     }),
+    TokenModule,
   ],
   controllers: [AuthController],
   providers: [AuthService],
