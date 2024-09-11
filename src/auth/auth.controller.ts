@@ -3,18 +3,14 @@ import { AuthService } from './auth.service';
 import { Request } from 'express';
 import { AppBadRequest } from 'src/app.exception';
 import { LoginDto } from './dto/login.dto';
-import { UsersService } from 'src/security/users/users.service';
 
 @Controller('auth')
 export class AuthController {
-    constructor(
-        private readonly authService: AuthService,
-        private readonly usersService: UsersService,
-      ) {}
-    
+  constructor(private readonly authService: AuthService) {}
+
   @Post('login')
-  async login(@Body() loginDto: LoginDto) {
-    return await this.authService.login(loginDto.email, loginDto.password);
+  async login(@Body() loginDto: LoginDto, @Req() request: Request) {
+    return await this.authService.login(loginDto.email, loginDto.password, request);
   }
 
   @Post('refresh')
@@ -23,6 +19,6 @@ export class AuthController {
     if (!token) {
       throw new AppBadRequest('Token de actualización no proporcionado');
     }
-    return await this.authService.refreshToken(token);
+    return await this.authService.refreshToken(token, request.ip);
   }
 }
